@@ -3,11 +3,11 @@ package controller
 import (
 	"MS1/model"
 	"MS1/service"
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 type Controller struct {
@@ -15,7 +15,8 @@ type Controller struct {
 }
 
 func (controller *Controller) CreateProduct(c *gin.Context) {
-	var input model.AddProductInput
+	log.Infoln("controller.go, CreateProduct function started....")
+	var input model.Product
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -27,11 +28,13 @@ func (controller *Controller) CreateProduct(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": product})
-	fmt.Println("path: ", c.Request.URL.Path)
+	log.Infoln("path: ", c.Request.URL.Path)
+	log.Infoln("controller.go, CreateProduct function ended....")
 	return
 }
 
 func (controller *Controller) UpdateProduct(c *gin.Context) {
+	log.Infoln("controller.go, UpdateProduct function started....")
 	var updateInput model.Product
 	if err := c.ShouldBindJSON(&updateInput); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -43,16 +46,17 @@ func (controller *Controller) UpdateProduct(c *gin.Context) {
 		return
 
 	}
-	fmt.Println("input : ", updateInput)
-	fmt.Println("uid: ", uid)
+	log.Infoln("input : ", updateInput)
+	log.Infoln("uid: ", uid)
 	product, err := controller.Service.UpdateProduct(c, &updateInput, uint(uid))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": product})
-	fmt.Println("output data", product)
-	fmt.Println("host: ", c.Request.URL.Host)
-	fmt.Println("path: ", c.Request.URL.Path)
+	log.Infoln("output data", product)
+	log.Infoln("host: ", c.Request.URL.Host)
+	log.Infoln("path: ", c.Request.URL.Path)
+	log.Infoln("controller.go, UpdateProduct function ended....")
 	return
 }

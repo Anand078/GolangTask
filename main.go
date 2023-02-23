@@ -11,7 +11,6 @@ import (
 )
 
 func main() {
-
 	r := gin.Default()
 	db := config.InitDB()
 	db.AutoMigrate(&model.Product{})
